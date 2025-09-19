@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Срочное сообщение!</title>
+    <style>
+        body {
+            background-color: #ffe6f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            font-family: 'Arial', sans-serif;
+        }
+
+        #container {
+            position: relative;
+            text-align: center;
+            padding: 30px;
+            background-color: #fff;
+            border-radius: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);        }
+
+        #bigHeart {
+            font-size: 12em;
+            color: red;
+            cursor: pointer;
+            transition: transform 0.1s ease-in-out, background 0.5s ease-in-out;
+            background: linear-gradient(to right, #ff69b4, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 100%;
+            animation: none;
+        }
+
+        #bigHeart:active {
+            transform: scale(0.8);
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 1.2em;
+            background-color: #e91e63;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #c2185b;
+        }
+
+        .smallHeart {
+            position: absolute;
+            font-size: 1em;
+            color: red;
+            animation: explode 1s ease-out forwards, rainbow 3s linear infinite;
+            pointer-events: none;
+            background: linear-gradient(to right, #ff69b4, #ff0000);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-size: 200% 100%;
+        }
+
+        @keyframes explode {
+            0% {
+                transform: translate(0, 0);
+                opacity: 1;
+            }
+            100% {
+                transform: translate(var(--x), var(--y));
+                opacity: 0;
+            }
+        }
+
+        @keyframes rainbow {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        #message {
+            margin-top: 30px;
+            font-size: 1.5em;
+            color: #e91e63;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        #scale {
+            width: 400px;
+            height: 20px;
+            background-color: #ddd;
+            margin-top: 10px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        #progress {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(to right, #ff69b4, #ff0000);
+            background-size: 200% 100%;
+            transition: width 0.5s ease-in-out, background 0.5s ease-in-out;
+        }
+
+        #percent {
+            margin-top: 5px;
+            font-size: 1em;
+            color: #888;
+        }
+
+        #container::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 100px 20px 100px;
+            border-style: solid;
+            border-color: transparent transparent #fff transparent;
+            z-index: 1;
+        }
+
+        #endImage {
+            display: none;
+            margin-top: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            max-width: 80%;
+            height: auto;
+        }
+
+        #extraContent {
+            height: 500px;
+            text-align: center;
+            margin-top: 50px;
+            color: #888;
+        }
+
+
+    </style>
+</head>
+<body>
+    <div id="container">
+        <div id="bigHeart">❤️</div>
+        <button id="explodeButton">Click Me</button>
+    </div>
+    <div id="message">Я люблю тебя :)</div>
+
+    <div id="scale">
+        <div id="progress"></div>
+    </div>
+    <div id="percent">Шкала любви: <span id="percentage">0%</span></div>
+
+    <img id="endImage" src="https://basket-19.wbbasket.ru/vol3231/part323127/323127484/images/c516x688/1.webp" alt="Cute Valentine Image">
+
+    <script>
+        const bigHeart = document.getElementById('bigHeart');
+        const explodeButton = document.getElementById('explodeButton');
+        const container = document.getElementById('container');
+        const progress = document.getElementById('progress');
+        const percentageSpan = document.getElementById('percentage');
+        const endImage = document.getElementById('endImage');
+
+        let clickCount = 0;
+
+        explodeButton.addEventListener('click', explodeHeart);
+
+        function explodeHeart() {
+            clickCount++;
+
+            bigHeart.style.transform = 'scale(0.9)';
+            setTimeout(() => {
+                bigHeart.style.transform = 'scale(1)';
+            }, 100);
+
+            const numberOfHearts = 15;
+
+            for (let i = 0; i < numberOfHearts; i++) {
+                const smallHeart = document.createElement('div');
+                smallHeart.classList.add('smallHeart');
+                smallHeart.textContent = '❤️';
+
+                const randomX = (Math.random() - 0.5) * 400;
+                const randomY = (Math.random() - 0.5) * 400;
+
+
+                smallHeart.style.left = `${bigHeart.offsetLeft + bigHeart.offsetWidth / 2}px`;
+                smallHeart.style.top = `${bigHeart.offsetTop + bigHeart.offsetHeight / 2}px`;
+
+
+                smallHeart.style.setProperty('--x', `${randomX}px`);
+                smallHeart.style.setProperty('--y', `${randomY}px`);
+
+                container.appendChild(smallHeart);
+
+                smallHeart.addEventListener('animationend', () => {
+                    smallHeart.remove();
+                });
+            }
+
+            let progressValue = Math.min((clickCount / 20), 1) * 100;
+            progress.style.width = `${progressValue}%`;
+            percentageSpan.textContent = `${Math.round(progressValue)}%`;
+
+            updateHeartColor(progressValue);
+
+            if (progressValue >= 100) {
+                endImage.style.display = 'block';
+                explodeButton.disabled = true;
+            }
+        }
+
+        function updateHeartColor(progressValue) {
+
+            const red = 255;
+            const green = 105 - (105 * progressValue / 100);
+            const blue = 180 - (180 * progressValue / 100);
+
+            const newColor = `rgb(${red}, ${Math.round(green)}, ${Math.round(blue)})`;
+
+            bigHeart.style.background = `linear-gradient(to right, #ff69b4, ${newColor})`;
+            bigHeart.style.webkitBackgroundClip = "text";
+            bigHeart.style.webkitTextFillColor = "transparent";
+
+            const smallHearts = document.querySelectorAll('.smallHeart');
+            smallHearts.forEach(heart => {
+                heart.style.background = `linear-gradient(to right, #ff69b4, ${newColor})`;
+                heart.style.webkitBackgroundClip = "text";
+                heart.style.webkitTextFillColor = "transparent";
+            });
+
+            progress.style.background = `linear-gradient(to right, #ff69b4, ${newColor})`;
+
+
+        }
+    </script>
+</body>
+</html>
