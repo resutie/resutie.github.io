@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Подними настроение!</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      background: #f0f4f8;
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    .container {
+      max-width: 600px;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      margin-bottom: 20px;
+    }
+
+    h1 {
+      color: #34495e;
+      margin-bottom: 20px;
+      font-size: 2em;
+    }
+
+    h2 {
+      color: #5499c7;
+      margin-top: 20px;
+      margin-bottom: 10px;
+      font-size: 1.4em;
+    }
+
+    p {
+      font-size: 1.1em;
+      margin-bottom: 25px;
+      color: #7f8c8d;
+      line-height: 1.6;
+    }
+
+    button {
+      background-color: #3498db;
+      color: white;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #2980b9;
+    }
+
+    .question-section {
+      margin-top: 30px;
+    }
+
+    #response {
+      font-style: italic;
+      color: #95a5a6;
+      min-height: 2em;
+    }
+
+    .input-group {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    input[type="text"] {
+      padding: 14px;
+      border: 1px solid #bdc3c7;
+      border-radius: 6px;
+      font-size: 1em;
+      width: 70%;
+      margin-right: 10px;
+      color: #34495e;
+    }
+
+     input[type="text"]:focus {
+        outline: none;
+        border-color: #3498db;
+        box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+    }
+
+    .fake-button {
+      background-color: #9b59b6;
+      color: white;
+      padding: 14px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .fake-button:hover {
+      background-color: #8e44ad;
+    }
+
+    .footer {
+      margin-top: auto;
+      padding: 20px;
+      text-align: center;
+      color: #95a5a6;
+      font-size: 0.8em;
+    }
+
+    .sun {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: #f1c40f;
+        border-radius: 50%;
+        box-shadow: 0 0 20px rgba(241, 196, 15, 0.8);
+        animation: fadeIn 0.5s ease-in-out;
+    }
+
+    .sun::before,
+    .sun::after {
+        content: '';
+        position: absolute;
+        background-color: #f1c40f;
+        border-radius: 50%;
+    }
+
+    .sun::before {
+        top: -20px;
+        left: 15px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .sun::after {
+        top: 15px;
+        left: -20px;
+        width: 20px;
+        height: 20px;
+    }
+
+    .sun::after.ray {
+        top: initial;
+        bottom: -20px;
+        left: 15px;
+    }
+
+    .sun::before.ray {
+        top: 15px;
+        right: -20px;
+        left: initial;
+    }
+
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Нужно немного подбодриться?</h1>
+
+    <h2>Шутка:</h2>
+    <p id="joke">Загрузка шутки...</p>
+    <button onclick="getJoke()">Следующая шутка</button>
+
+    <h2>Комплимент:</h2>
+    <p id="compliment">Загрузка комплимента...</p>
+    <button onclick="getCompliment()">Следующий комплимент</button>
+
+    <div class="question-section">
+      <h3>Что у тебя на уме?</h3>
+      <div class="input-group">
+        <input type="text" id="user-input" placeholder="Расскажи мне...">
+        <button class="fake-button" onclick="getResponse()">Отправить</button>
+      </div>
+      <p id="response"></p>
+    </div>
+  </div>
+
+  <div class="footer">
+    Сделано с любовью и заботой.
+  </div>
+
+  <script>
+
+    const jokes = [
+      "Почему программисты всегда путают Хэллоуин и Рождество? Потому что Oct 31 == Dec 25!",
+      "Слышал, что скупой платит дважды, теперь хочу работать у скупого.",
+      "Как называется медведь без зубов? Гамми-мишка!",
+      "Что сказал программист, когда тонул?  F1!",
+      "Однажды городской тип купил поселок. Теперь это поселок городского типа.",
+      "И у мужчин, и у женщин бывают невероятно тяжелые моменты в жизни. У женщин — роды. У мужчин — миссия в ГТА с вертолетиком.",
+      "Я всегда говорю правду, даже когда вру.",
+      "Не бойся, когда ты один. Бойся, когда тебя два.",
+      "Автобусы как инкассаторы. В них много бабок.",
+      "Я себе ни в чем не отказываю, и всем советую ни в чем мне не отказывать."
+    ];
+
+    const compliments = [
+      "У тебя потрясающее чувство юмора!",
+      "Твой ум и интеллект всегда меня впечатляют.",
+      "Ты умеешь поддерживать и вдохновлять других.",
+      "Твоя целеустремленность восхищает.",
+      "У тебя невероятно доброе сердце.",
+      "Ты умеешь находить красоту в простых вещах.",
+      "Твой взгляд на мир уникален и интересен.",
+      "Ты очень харизматичный и обаятельный.",
+      "Твои идеи всегда свежи и оригинальны.",
+      "Ты умеешь находить выход из любой ситуации.",
+      "Ты милый и красивый."
+    ];
+
+    const comfortResponses = [
+      "Не волнуйся, я всегда рядом.",
+      "Всё будет хорошо, я обещаю.",
+      "Иди сюда, я тебя обниму.",
+      "Это всего лишь временные трудности, ты справишься.",
+      "Я верю в тебя.",
+      "Помни, ты не один.",
+      "Я здесь, чтобы поддержать тебя.",
+      "Сделай глубокий вдох. У тебя всё получится.",
+      "Это чувство временно. Впереди светлые дни.",
+      "Это нормально - чувствовать себя не в порядке. Позволь себе почувствовать, а затем отпусти это."
+    ];
+
+    let jokeIndex = 0;
+
+    function getJoke() {
+      const joke = jokes[jokeIndex];
+      document.getElementById("joke").textContent = joke;
+      jokeIndex = (jokeIndex + 1) % jokes.length; // Cycle through jokes
+      createSun();
+    }
+
+    function getRandomElement(array) {
+      return array[Math.floor(Math.random() * array.length)];
+    }
+
+    function getCompliment() {
+      document.getElementById("compliment").textContent = getRandomElement(compliments);
+      createSun();
+    }
+
+    function getResponse() {
+      document.getElementById("response").textContent = getRandomElement(comfortResponses);
+      createSun();
+    }
+
+    function createSun() {
+        const sun = document.createElement('div');
+        sun.classList.add('sun');
+        sun.style.left = Math.random() * 90 + 'vw'; // Random horizontal position
+        sun.style.top = Math.random() * 90 + 'vh';    // Random vertical position
+
+        // Create sun rays
+        const ray1 = document.createElement('div');
+        ray1.classList.add('sun::before');
+        ray1.classList.add('ray');
+        sun.appendChild(ray1);
+
+        const ray2 = document.createElement('div');
+        ray2.classList.add('sun::after');
+        ray2.classList.add('ray');
+        sun.appendChild(ray2);
+
+        document.body.appendChild(sun);
+
+        // Remove the sun after the animation (optional)
+        setTimeout(() => {
+            sun.remove();
+        }, 1000); // Remove after 1 second
+    }
+
+    // Load initial joke and compliment
+    getJoke();
+    getCompliment();
+  </script>
+</body>
+</html>
